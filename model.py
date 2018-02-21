@@ -36,18 +36,18 @@ class hourglass:
 			l4 = self.residual(l4,name="res3")            
             l4 = relu_batch_norm(l4)
 
-           	#16x16x256 -> 8x8x256
-           	l5 = tf.layers.MaxPooling2D(l5,pool_size=(2,2),strides=(1,1),padding="SAME")
-           	l5 = self.residual(l5,name="res4")
-           	l5 = relu_batch_norm(l5)
+            #16x16x256 -> 8x8x256
+            l5 = tf.layers.MaxPooling2D(l5,pool_size=(2,2),strides=(1,1),padding="SAME")
+            l5 = self.residual(l5,name="res4")
+            l5 = relu_batch_norm(l5)
 
            	
-           	#8x8x256 -> 4x4x256
-           	l6 = tf.layers.MaxPooling2D(l6,pool_size=(2,2),strides=(1,1),padding="SAME")
-           	l6 = self.residual(l6)
-           	l6 = relu_batch_norm(l6)
+            #8x8x256 -> 4x4x256
+            l6 = tf.layers.MaxPooling2D(l6,pool_size=(2,2),strides=(1,1),padding="SAME")
+            l6 = self.residual(l6)
+            l6 = relu_batch_norm(l6)
 
-           	up1 = tf.image.resize_nearest_neigbors(l6,size=[16,16])
+            up1 = tf.image.resize_nearest_neigbors(l6,size=[16,16])
 
     def residual(self,input_tensor,name="residual"):
         """
