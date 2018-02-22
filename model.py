@@ -14,8 +14,11 @@ class model:
         self.stack = stack_number
         self.input_image = tf.placeholder(tf.float32,shape=[None,256,256,3])
         # TODO how to preprocess data , make label  
-        #self.out_tensor = tf.placeholder(tf.float32,size=[None])
 
+
+        #image width = 64,height = 64 , 16 joints = 16  
+        self.out_tensor = tf.placeholder(tf.float32,size=[None,64,64,16])
+        self.output = self.generate_network(self.input_image,name = "single_model")
         
     def generate_network(self,input_tensor,name="main_model"):
     	""" generate main model 
@@ -121,7 +124,9 @@ class model:
 	        
 	    return out
 
-    
+    def get_loss(self):
+    	#TODO  -> 
+    	pass
 
     def train(self):
         #TODO
