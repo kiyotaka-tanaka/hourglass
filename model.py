@@ -39,7 +39,9 @@ class model:
             
             drop = tf.layers.dropout(hg,rate = self.dropout_rate,trainining=self.training,name="dropout")
             
+            ll =  tf.layers.conv2d(drop,filters=16,kernel_size=(1,1),strides=(1,1),padding="SAME")
 
+            return ll
     def hourglass(self,input_tensor,n,out_dim,name="hourglass"):
     	""" Hourglass block
     	Args:
@@ -121,7 +123,10 @@ class model:
 
     
 
-
+    def train(self):
+        #TODO
+        #train method
+        pass
     
 
 
