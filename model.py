@@ -49,24 +49,59 @@ class hourglass:
 
             up1 = tf.image.resize_nearest_neigbors(l6,size=[16,16])
 
-    def residual(self,input_tensor,name="residual"):
+    def residual(self,input_tensor,out_dim,name="residual"):
+        """ residual block same as Stacked hourglass network paper
+		Args:
+			input_tensor :
+			out_dim : desired filters out_dim
         """
-        residual block same as Stacked hourglass network paper
-        """
-        with tf.variable_scope(name):
-            
-            out = tf.layers.conv2d(input_tensor,filters=128,kernel_size=(1,1),strides=(1,1)padding="SAME")
-            out = relu_batch_norm(out)
-            out = tf.layers.conv2d(out,filters=128,kernel_size=(3,3),strides=(1,1),padding="SAME")
-            out = relu_batch_norm(out)
-            out = tf.layers.conv2d(out,filters=256,kernel_size=(1,1),strides=(1,1),padding="SAME")
-            
-        return tf.add(input_tensor,out)
+     	with tf.variable_scope(name):
+     		conv_block = self.conv_block(input_tensor,out_dim,name="conv_block")
+     		skip_layer = self.skip_layer(input_tensor,out_dim,name="skip_layer")
 
-    
-    
-    
-	    
+     		out = tf.add(conv_block,skip_layer)
+
+     	return out
+    # design is like torch code
+    def conv_block(input_tensor,out_dim,name="conv_block"):
+        """convolutional block 
+        Args:
+           input_tensor: input tensor (conv outputs )
+           out_dim:  block feature 
+           name :    scope name it has to different each time to avoid tensorflow error
+        	"""
+        with tf.variable_scope(name):
+        	norm_1 = relu_batch_norm(input_tensor)
+        	conv_1 = tf.layers.conv2d(norm_1,filters=out_dim/2,kernel_size=(1,1),strides=(1,1),padding="SAME")
+			
+			norm_2 = relu_batch_norm(conv_1)
+			conv_2 = tf.layers.conv2d(conv_1,filters=out_dim/2,kernel_size=(3,3),strides=(1,1),padding="SAME")
+
+			norm_3 = relu_batch_norm(conv_2)
+			conv_3 = tf.layers.conv2d(norm_3,filters=out_dim,kernel_size=(1,1),strides=(1,1),padding="SAME")
+
+		return conv_3
+
+
+	#design is like torch code
+    def skip_layer(input_tensor,out_dim,name="skip_layer"):
+        """ Skip layer   
+        Args:
+            input_tensor:
+            out_dim  :   Desired out_dim 
+			name :  to avoid tensorflow reuse error
+        """
+    	with tf.variable_scope(name):
+    		if input_tensor.get_shape().as_list()[3] == out_dim:
+    			out = input_tensor
+    		else:
+    			out =  tf.layers.conv2d(input_tensor,filters=out_dim,kernel_size=(1,1),strides=(1,1),padding="SAME")
+	
+		return out
+
+
+
+
     
 
 
