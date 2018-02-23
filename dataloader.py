@@ -55,6 +55,7 @@ class youtube:
                 
     def make_heatmap(self):
         """make heatmap from annotation 
+        do not use for now 
         Args:
         """
         
@@ -64,6 +65,7 @@ class youtube:
 
     def get_locations(self):
         """
+        do not use for now
         """
         
         pass

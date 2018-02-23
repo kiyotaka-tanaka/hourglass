@@ -5,20 +5,28 @@ import numpy as np
 
 
 class model:
-    def __init__(self,stack_number=4):
+    def __init__(self,dropout_rate,learing_rate,dataloader,is_training=True):
 
         """
         Implementation of single hourglass network
         
         """
-        self.stack = stack_number
+        self.learning_rate = learning_rate
+        self.dropout_rate = dropout_rate
+        self.training = is_training
+
         self.input_image = tf.placeholder(tf.float32,shape=[None,256,256,3])
         # TODO how to preprocess data , make label  
-
-
+        self.dataloader = dataloader
+        
         #image width = 64,height = 64 , 16 joints = 16  
         self.out_tensor = tf.placeholder(tf.float32,size=[None,64,64,16])
         self.output = self.generate_network(self.input_image,name = "single_model")
+
+        #self.loss = 
+
+        #self.opt = 
+
         
     def generate_network(self,input_tensor,name="main_model"):
     	""" generate main model 
@@ -38,13 +46,13 @@ class model:
             r1 = self.residual(pool1,128,name="r1")
             r2 = self.residual(r1,256,namel="r2")
 
-            hg = self.hourglass(r2,4,16,name="hourglass")
+            hg = self.hourglass(r2,4,256,name="hourglass")
             
             drop = tf.layers.dropout(hg,rate = self.dropout_rate,trainining=self.training,name="dropout")
             
             ll =  tf.layers.conv2d(drop,filters=16,kernel_size=(1,1),strides=(1,1),padding="SAME")
 
-            return ll
+            return tf.nn.sigmoid(ll)
     def hourglass(self,input_tensor,n,out_dim,name="hourglass"):
     	""" Hourglass block
     	Args:
@@ -126,13 +134,15 @@ class model:
 
     def get_loss(self):
     	#TODO  -> 
-    	pass
+    	
 
-    def train(self):
+    def train(self,epochs):
         #TODO
         #train method
-        pass
-    
+
+        for t in range(epochs):
+            image,heatmap = self.dataloader()
+            
 
 
 ### helper functions ####
