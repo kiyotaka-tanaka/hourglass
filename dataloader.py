@@ -33,15 +33,23 @@ class youtube:
             
             batch_image = []
             batch_heatmap = []
+
+            
             
             for sample in samples:
                 image_name ="frame_"+ str(image_ids[sample]).zfill(6)+".jpg"
                 image_path = os.path.join(file_path,image_name)
                 location = locations[:][:][sample] # 2x7 -> x,y   head , shoulder etc ...
-                
+                img_height,img_width = get_image_size(image_path)
+                heat_map = []
+                for i in range(7):
+                    center = [location[0][i]*64.0/img_height,location[1][i]*64.0/img_width]
+                    mapx = makeGaussian(64,center)
+                    heat_map.append(mapx)
+                	
                 batch_image.append(read_image(image_path))
+                batch_heatmap.append(np.array(heat_map))
                 
-
 
             yield batch_image,batch_heatmap
                 
@@ -49,7 +57,7 @@ class youtube:
         """make heatmap from annotation 
         Args:
         """
-
+        
         
         
         pass
@@ -97,3 +105,9 @@ def read_mat(file_path):
     mat = scipy.io.loadmat(filepath)
     return mat["data"]
 
+
+def get_image_size(img_path):
+    img = cv2.imread(img_path)
+    height , width =  img.shape[:2]
+
+    return height, width
