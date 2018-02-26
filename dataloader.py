@@ -30,31 +30,31 @@ class youtube:
             image_ids = dat["frameids"][0]
             #sample batch size data
             samples = np.random.choice(np.arange(len(image_ids)),size=self.batch_size,replace=False)
-
+            
             locations = dat["locs"]
-            print ("locations shape xxxxxxxxxxxxxxxxxxxxxxxxx")
-            print (locations.shape)
+
             batch_image = []
             batch_heatmap = []
-
-            
             
             for sample in samples:
                 image_name ="frame_"+ str(image_ids[sample]).zfill(6)+".jpg"
                 image_path = os.path.join(file_path,image_name)
-                print sample
-                location = locations[0][:][sample] # 2x7 -> x,y   head , shoulder etc ...
+               
+                location = locations[:,:,sample] # 2x7 -> x,y   head , shoulder etc ...
+
                 img_height,img_width = get_image_size(image_path)
                 heat_map = []
                 for i in range(7):
-                    center = [location[0][i]*64.0/img_height,location[1][i]*64.0/img_width]
-                    mapx = makeGaussian(64,center)
+                    center = (int(location[0][i]*64.0/img_height),int(location[1][i]*64.0/img_width))
+
+                    mapx = makeGaussian(64,center=center)
                     heat_map.append(mapx)
-                	
+                    
                 batch_image.append(read_image(image_path))
                 batch_heatmap.append(np.array(heat_map))
+            batch_heatmap = np.array(batch_heatmap)
+            batch_heatmap = np.swapaxes(batch_heatmap,1,3)
                 
-
             yield batch_image,batch_heatmap
                 
     def make_heatmap(self):
@@ -101,7 +101,7 @@ def makeGaussian(size, fwhm = 3, center=None):
 
 def read_image(image_path):
     img = cv2.imread(image_path)
-    img = cv2.cvtcolor(img,cv2.COLOR_BGR2RGB)
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 
     return cv2.resize(img,(256,256))
     
