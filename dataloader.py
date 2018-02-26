@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 import os
 
+import scipy.io
+
 """
 first version only for Youtube_pose_database
 """
@@ -9,7 +11,7 @@ class youtube:
 
     def __init__(self,folder,mat_file,batch_size):
         #TODO ->
-        self.folder = image_folder
+        self.folder = folder
         self.batch_size = batch_size
 
         self.read_annotation(mat_file)
@@ -30,7 +32,8 @@ class youtube:
             samples = np.random.choice(np.arange(len(image_ids)),size=self.batch_size,replace=False)
 
             locations = dat["locs"]
-            
+            print ("locations shape xxxxxxxxxxxxxxxxxxxxxxxxx")
+            print (locations.shape)
             batch_image = []
             batch_heatmap = []
 
@@ -39,7 +42,8 @@ class youtube:
             for sample in samples:
                 image_name ="frame_"+ str(image_ids[sample]).zfill(6)+".jpg"
                 image_path = os.path.join(file_path,image_name)
-                location = locations[:][:][sample] # 2x7 -> x,y   head , shoulder etc ...
+                print sample
+                location = locations[0][:][sample] # 2x7 -> x,y   head , shoulder etc ...
                 img_height,img_width = get_image_size(image_path)
                 heat_map = []
                 for i in range(7):
@@ -104,7 +108,7 @@ def read_image(image_path):
 
 
 def read_mat(file_path):
-    mat = scipy.io.loadmat(filepath)
+    mat = scipy.io.loadmat(file_path)
     return mat["data"]
 
 
