@@ -7,7 +7,7 @@ maxpool = tf.layers.MaxPooling2D(pool_size=[2,2],strides=(2,2),padding="SAME")
 
 class model:
     def __init__(self,dropout_rate,learning_rate,dataloader,is_training=True):
-
+        
         """
         Implementation of single hourglass network
         
@@ -61,7 +61,8 @@ class model:
             
             ll =  tf.layers.conv2d(drop,filters=7,kernel_size=(1,1),strides=(1,1),padding="SAME")
             
-            return tf.nn.sigmoid(ll)
+            #return tf.nn.sigmoid(ll)
+            return ll
     def hourglass(self,input_tensor,n,out_dim,name="hourglass"):
     	""" Hourglass block
     	Args:

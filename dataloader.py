@@ -102,7 +102,7 @@ def makeGaussian(size, fwhm = 3, center=None):
 def read_image(image_path):
     img = cv2.imread(image_path)
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-
+    img = img/255.0
     return cv2.resize(img,(256,256))
     
 
