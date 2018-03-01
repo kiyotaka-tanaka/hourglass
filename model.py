@@ -157,7 +157,10 @@ class model:
             if t % 100 == 0:
                 print (loss)
                 self.saver.save(self.sess,"./models/"+str(t)+".ckpt")
-                
+
+
+    def restore(self,model_path):
+        self.saver.restore(self.sess,model_path)
 ### helper functions ####
 def relu_batch_norm(x):
     return tf.nn.relu(tf.layers.batch_normalization(x))
