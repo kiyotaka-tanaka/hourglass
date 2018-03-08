@@ -5,6 +5,7 @@ from dataloader import youtube,read_image
 import cv2
 import argparse
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 parser = argparse.ArgumentParser()
@@ -22,7 +23,11 @@ model_.restore(args.model_path)
 
 image = read_image(args.image_path)
 image = np.expand_dims(image,axis=0)
-output = model_.sess.run(model_.sigmoid_out,feed_dict={model_.input_image:image})
+output = model_.sess.run(model_.sigmoid_out,feed_dict={model_.input_image:image})[0]
 
-print output
+head = output[:,:,0:1]
 
+head = np.squeeze(head)
+
+plt.imshow(head,cmap="hot",interpolation="nearest")
+plt.show()

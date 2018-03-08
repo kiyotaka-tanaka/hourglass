@@ -10,7 +10,6 @@ class model:
         
         """
         Implementation of single hourglass network
-        
         """
         self.learning_rate = learning_rate
         self.dropout_rate = dropout_rate
@@ -23,7 +22,7 @@ class model:
         #image width = 64,height = 64 , 16 joints = 16  
         self.out_tensor = tf.placeholder(tf.float32,shape=[None,64,64,7])
         self.output = self.generate_network(self.input_image,name = "single_model")
-
+        
         self.sigmoid_out = tf.nn.sigmoid(self.output)
         
         self.loss = tf.reduce_mean(self.get_loss())
@@ -33,7 +32,7 @@ class model:
         gpu_options = tf.GPUOptions(allow_growth=True)
         
         self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
-
+        
         self.saver = tf.train.Saver()
     def generate_network(self,input_tensor,name="main_model"):
         """ generate main model 

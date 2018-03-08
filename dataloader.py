@@ -1,4 +1,4 @@
-import numpy as np 
+mport numpy as np 
 import cv2
 import os
 
@@ -25,7 +25,7 @@ class youtube:
         for i,dat in enumerate(self.data[0]):
             video_name = dat["videoname"]
             file_path = os.path.join(self.folder,video_name[0])
-
+            
             # get annotated frames
             image_ids = dat["frameids"][0]
             #sample batch size data
@@ -48,6 +48,7 @@ class youtube:
                     center = (int(location[0][i]*64.0/img_height),int(location[1][i]*64.0/img_width))
 
                     mapx = makeGaussian(64,center=center)
+                    mapx = np.transpose(mapx)
                     heat_map.append(mapx)
                     
                 batch_image.append(read_image(image_path))
