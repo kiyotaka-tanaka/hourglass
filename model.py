@@ -23,11 +23,13 @@ class model:
         #image width = 64,height = 64 , 16 joints = 16  
         self.out_tensor = tf.placeholder(tf.float32,shape=[None,64,64,7])
         self.output = self.generate_network(self.input_image,name = "single_model")
+
+        self.sigmoid_out = tf.nn.sigmoid(self.output)
         
         self.loss = tf.reduce_mean(self.get_loss())
         
         self.opt = tf.train.RMSPropOptimizer(learning_rate = self.learning_rate,decay=0.9).minimize(self.loss)
-
+        
         gpu_options = tf.GPUOptions(allow_growth=True)
         
         self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
@@ -141,8 +143,10 @@ class model:
         return out
                     
     def get_loss(self):
-    	#TODO  -> 
-    	return tf.nn.sigmoid_cross_entropy_with_logits(logits = self.output,labels=self.out_tensor)
+    	#TODO  ->
+        out = tf.contrib.layers.flatten(self.output)
+        label = tf.contrib.layers.flatten(self.out_tensor)
+    	return tf.nn.sigmoid_cross_entropy_with_logits(logits = out,labels=label)
 
     def train(self,epochs):
         #TODO
