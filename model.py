@@ -56,8 +56,8 @@ class model:
             r1 = self.residual(pool1,128,name="r1")
             r2 = self.residual(r1,256,name="r2")
 
-            hg = self.hourglass(r2,4,256,name="hourglass")
-            
+            hg = self.hourglass(r2,4,256,name="hourglass1")
+            hg = self.hourglass(hg,4,256,name="hourglass2")
             drop = tf.layers.dropout(hg,rate = self.dropout_rate,training=self.training,name="dropout")
             
             ll =  tf.layers.conv2d(drop,filters=7,kernel_size=(1,1),strides=(1,1),padding="SAME")
@@ -157,7 +157,7 @@ class model:
             for (image,heatmap) in generator:
                 loss,_ = self.sess.run([self.loss,self.opt],feed_dict={self.input_image:image,self.out_tensor:heatmap})
 
-            if t % 100 == 0:
+            if t % 10 == 0:
                 print (loss)
                 self.saver.save(self.sess,"./models/"+str(t)+".ckpt")
 
