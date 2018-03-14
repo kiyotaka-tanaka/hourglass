@@ -25,7 +25,7 @@ image = read_image(args.image_path)
 image = np.expand_dims(image,axis=0)
 output = model_.sess.run(model_.sigmoid_out,feed_dict={model_.input_image:image})[0]
 
-head = output[:,:,0:1]
+head = output[:,:,3:4]
 
 head = np.squeeze(head)
 

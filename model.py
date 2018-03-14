@@ -143,10 +143,12 @@ class model:
                     
     def get_loss(self):
     	#TODO  ->
-        out = tf.contrib.layers.flatten(self.output)
-        label = tf.contrib.layers.flatten(self.out_tensor)
-    	return tf.nn.sigmoid_cross_entropy_with_logits(logits = out,labels=label)
+        #out = tf.contrib.layers.flatten(self.output)
+        #label = tf.contrib.layers.flatten(self.out_tensor)
+    	#return tf.nn.sigmoid_cross_entropy_with_logits(logits = out,labels=label)
+        return tf.losses.mean_squared_error(labels=self.out_tensor,predictions=self.output)
 
+        
     def train(self,epochs):
         #TODO
         #train method
@@ -160,7 +162,8 @@ class model:
             if t % 10 == 0:
                 print (loss)
                 self.saver.save(self.sess,"./models/"+str(t)+".ckpt")
-
+            #if t == 40:
+            #    self.learning_rate = self.learning_rate/10.0
 
     def restore(self,model_path):
         self.saver.restore(self.sess,model_path)
@@ -175,6 +178,6 @@ if __name__=="__main__":
     print ("MAIN PROCESS")
     dataload = youtube(folder="./GT_frames",mat_file="YouTube_Pose_dataset.mat",batch_size=10) 
     
-    model_ = model(dropout_rate=0.1,learning_rate=0.0001,dataloader=dataload)
+    model_ = model(dropout_rate=0.1,learning_rate=0.00001,dataloader=dataload)
 
     model_.train(10000)

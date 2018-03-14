@@ -46,7 +46,7 @@ class youtube:
                 heat_map = []
                 for i in range(7):
                     center = (int(location[0][i]*64.0/img_height),int(location[1][i]*64.0/img_width))
-
+                    
                     mapx = makeGaussian(64,center=center)
                     mapx = np.transpose(mapx)
                     heat_map.append(mapx)
